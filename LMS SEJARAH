@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LMS Sejarah: Diakronik & Sinkronik</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 font-sans antialiased flex flex-col min-h-screen transition-colors duration-300">
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed top-5 right-5 z-50 transform translate-x-full transition-transform duration-300 bg-emerald-600 text-white px-6 py-3 rounded-xl shadow-2xl flex items-center gap-3">
+        <i id="toast-icon" class="fa-solid fa-circle-check text-xl"></i>
+        <span id="toast-message" class="font-medium text-sm">Berhasil melakukan aksi!</span>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="login-modal" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-3xl p-8 max-w-md w-full shadow-2xl border border-slate-200 dark:border-slate-700 space-y-6">
+            <div class="text-center space-y-2">
+                <div class="w-14 h-14 bg-amber-700 text-white rounded-2xl flex items-center justify-center mx-auto text-2xl shadow-lg">
+                    <i class="fa-solid fa-landmark"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white">Masuk ke LMS Sejarah</h2>
+                <p class="text-xs text-slate-500 dark:text-slate-400">Pilih peran Anda untuk mengakses portal pembelajaran digital</p>
+            </div>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase mb-1">Nama Pengguna</label>
+                    <input type="text" id="login-username" placeholder="Contoh: Rian (Siswa) atau Pak Budi (Guru)" class="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-sm focus:ring-2 focus:ring-amber-600 focus:outline-none text-slate-900 dark:text-white">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase mb-1">Pilih Peran (Role)</label>
+                    <select id="login-role" class="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-sm focus:ring-2 focus:ring-amber-600 focus:outline-none text-slate-900 dark:text-white">
+                        <option value="siswa">Siswa / Peserta Didik</option>
+                        <option value="guru">Guru / Admin Pengampu</option>
+                    </select>
+                </div>
+                <button onclick="handleLogin()" class="w-full bg-amber-700 hover:bg-amber-800 text-white py-3.5 rounded-xl font-semibold text-sm transition shadow-lg flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-right-to-bracket"></i> Masuk ke Portal
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <header class="sticky top-0 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shadow-sm transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 bg-amber-700 rounded-xl flex items-center justify-center text-white shadow-md">
+                    <i class="fa-solid fa-landmark text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg text-slate-900 dark:text-white tracking-tight">LMS SEJARAH</h1>
+                    <span class="text-xs text-amber-700 dark:text-amber-500 font-semibold tracking-wide uppercase">Diakronik & Sinkronik</span>
+                </div>
+            </div>
+
+            <!-- Desktop Menu -->
+            <nav class="hidden lg:flex items-center gap-1">
+                <button onclick="switchTab('home')" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-amber-700 hover:bg-amber-50 dark:hover:bg-slate-800 transition active" data-target="home">Beranda</button>
+                <button onclick="switchTab('materi')" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-amber-700 hover:bg-amber-50 dark:hover:bg-slate-800 transition" data-target="materi">Materi</button>
+                <button onclick="switchTab('absensi')" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-amber-700 hover:bg-amber-50 dark:hover:bg-slate-800 transition" data-target="absensi">Absensi Kamera</button>
+                <button onclick="switchTab('diskusi')" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-amber-700 hover:bg-amber-50 dark:hover:bg-slate-800 transition" data-target="diskusi">Diskusi</button>
+                <button onclick="switchTab('evaluasi')" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-amber-700 hover:bg-amber-50 dark:hover:bg-slate-800 transition" data-target="evaluasi">Evaluasi & Peringkat</button>
+                <button onclick="switchTab('ai')" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-amber-700 hover:bg-amber-50 dark:hover:bg-slate-800 transition flex items-center gap-1.5" data-target="ai">
+                    <i class="fa-solid fa-robot text-amber-600"></i> Tanya AI
+                </button>
+                <!-- Guru Admin Panel Tab (Hidden unless logged in as guru) -->
+                <button id="nav-admin-btn" onclick="switchTab('admin')" class="nav-btn hidden px-4 py-2 rounded-lg text-sm font-medium text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/50 hover:bg-amber-100 transition" data-target="admin">
+                    <i class="fa-solid fa-gauge-high mr-1"></i> Panel Guru
+                </button>
+            </nav>
+
+            <!-- Controls (Dark Mode & User Badge) -->
+            <div class="flex items-center gap-3">
+                <!-- Dark Mode Toggle Button -->
+                <button onclick="toggleDarkMode()" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition" title="Ganti Tema">
+                    <i id="theme-icon" class="fa-solid fa-moon text-base"></i>
+                </button>
+
+                <!-- User Active Badge -->
+                <div class="hidden sm:flex items-center gap-2 bg-amber-50 dark:bg-slate-800 px-3 py-1.5 rounded-full border border-amber-200 dark:border-slate-700">
+                    <img id="user-badge-avatar" src="https://placehold.co/100x100/b45309/ffffff?text=User" alt="Avatar" class="w-7 h-7 rounded-full object-cover">
+                    <div class="text-left">
+                        <span id="user-badge-name" class="block text-xs font-semibold text-amber-900 dark:text-amber-400 leading-none">Rian (Siswa)</span>
+                        <span id="user-badge-role" class="text-[10px] text-slate-500 dark:text-slate-400">Peserta Didik</span>
+                    </div>
+                </div>
+
+                <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="lg:hidden p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Nav Drawer -->
+        <div id="mobile-menu" class="hidden lg:hidden bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 pt-2 pb-4 space-y-1">
+            <button onclick="switchTab('home'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-lg text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-amber-50 dark:hover:bg-slate-800">Beranda</button>
+            <button onclick="switchTab('materi'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-lg text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-amber-50 dark:hover:bg-slate-800">Materi</button>
+            <button onclick="switchTab('absensi'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-lg text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-amber-50 dark:hover:bg-slate-800">Absensi Kamera</button>
+            <button onclick="switchTab('diskusi'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-lg text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-amber-50 dark:hover:bg-slate-800">Diskusi</button>
+            <button onclick="switchTab('evaluasi'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-lg text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-amber-50 dark:hover:bg-slate-800">Evaluasi & Peringkat</button>
+            <button onclick="switchTab('ai'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-lg text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-amber-50 dark:hover:bg-slate-800">Tanya AI</button>
+            <button id="mobile-admin-btn" onclick="switchTab('admin'); toggleMobileMenu();" class="hidden block w-full text-left px-3 py-2 rounded-lg text-base font-medium text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/50">Panel Guru</button>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- TAB 1: HOME / PROFILE & INTRO -->
+        <section id="tab-home" class="tab-content space-y-10">
+            <!-- Hero Banner & Teacher Profile with Real Photo -->
+            <div class="bg-gradient-to-r from-amber-900 via-amber-800 to-amber-950 rounded-3xl p-8 sm:p-12 text-white shadow-xl relative overflow-hidden">
+                <div class="absolute -right-10 -bottom-10 opacity-10 text-9xl">
+                    <i class="fa-solid fa-scroll"></i>
+                </div>
+                <div class="relative z-10 grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
+                    <div class="lg:col-span-2 space-y-4">
+                        <span class="bg-amber-700/60 text-amber-200 text-xs font-semibold px-3 py-1 rounded-full border border-amber-600/40 uppercase tracking-widest">Portal E-Learning Sejarah</span>
+                        <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight">Membelah Waktu & Ruang Bersama Sejarah</h2>
+                        <p class="text-amber-100 text-base sm:text-lg max-w-2xl font-light leading-relaxed">
+                            Pelajari cara berpikir **Diakronik** (kronologis vertikal) dan **Sinkronik** (struktural horizontal) untuk menguasai analisis peristiwa masa lalu secara tajam dan ilmiah.
+                        </p>
+                        <div class="pt-2 flex flex-wrap gap-4">
+                            <button onclick="switchTab('materi')" class="bg-white text-amber-950 hover:bg-amber-50 font-semibold px-6 py-3 rounded-xl shadow transition flex items-center gap-2">
+                                <i class="fa-solid fa-book-open"></i> Mulai Bab 1
+                            </button>
+                            <button onclick="switchTab('ai')" class="bg-amber-700/80 hover:bg-amber-700 text-white font-semibold px-6 py-3 rounded-xl border border-amber-600/50 transition flex items-center gap-2">
+                                <i class="fa-solid fa-robot"></i> Tanya AI Tutor
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Teacher Professional Card with Photo -->
+                    <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 text-center flex flex-col items-center shadow-lg">
+                        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=300" alt="Dr. Budi Sejarah" class="w-28 h-28 rounded-full object-cover border-4 border-amber-200/50 shadow-md mb-4 object-top">
+                        <h3 class="font-bold text-lg text-white">Dr. Budi Sejarah, M.Pd.</h3>
+                        <p class="text-xs text-amber-200 mb-3 font-medium">Guru Pengampu Mata Pelajaran Sejarah</p>
+                        <blockquote class="text-xs italic text-amber-100 bg-amber-950/40 p-3 rounded-xl border border-amber-800/40 leading-relaxed">
+                            "Pendidikan bukan sekadar menghafal tahun kejadian, melainkan memahami esensi dan hikmah di balik setiap peradaban."
+                        </blockquote>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pendahuluan & Tujuan Pembelajaran -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-400 rounded-xl flex items-center justify-center mb-4 text-xl">
+                            <i class="fa-solid fa-compass"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3">Pengantar Pembelajaran</h3>
+                        <p class="text-slate-600 dark:text-slate-300 text-sm leading-relaxed mb-4">
+                            Dalam ilmu sejarah, pemahaman ruang dan waktu adalah kunci utama. Modul ini dirancang agar siswa mampu membedakan dengan jelas pendekatan diakronik (memanjang dalam waktu) dan sinkronik (melebar dalam ruang).
+                        </p>
+                    </div>
+                    <div class="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-100 dark:border-slate-700 text-xs text-slate-500 dark:text-slate-400 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-info text-amber-700"></i>
+                        <span>Cakupan Materi: Bab 1 s.d. Bab 5 (Fokus Utama: Bab 1)</span>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 rounded-xl flex items-center justify-center mb-4 text-xl">
+                            <i class="fa-solid fa-bullseye"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3">Tujuan Pembelajaran</h3>
+                        <ul class="space-y-3 text-sm text-slate-600 dark:text-slate-300">
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-check text-emerald-600 mt-1"></i>
+                                <span>Menjelaskan konsep berpikir diakronik dan sinkronik secara mendalam.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-check text-emerald-600 mt-1"></i>
+                                <span>Mengidentifikasi perbedaan dimensi vertikal dan horizontal peristiwa.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-check text-emerald-600 mt-1"></i>
+                                <span>Menerapkan analisis sejarah dalam kehidupan sosial bermasyarakat.</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="mt-6">
+                        <button onclick="switchTab('materi')" class="w-full text-center bg-slate-900 dark:bg-slate-700 hover:bg-slate-800 text-white py-3 rounded-xl text-sm font-semibold transition">
+                            Pelajari Materi Sekarang <i class="fa-solid fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: MATERI PEMBELAJARAN -->
+        <section id="tab-materi" class="tab-content hidden space-y-8">
+            <div class="bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-sm border border-slate-200 dark:border-slate-700">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 pb-6 border-b border-slate-100 dark:border-slate-700">
+                    <div>
+                        <span class="text-xs font-semibold text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/50 px-3 py-1 rounded-full border border-amber-200 dark:border-amber-800">Bab 1 Utama</span>
+                        <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white mt-2">Perbedaan Diakronik dan Sinkronik</h2>
+                    </div>
+                </div>
+
+                <!-- Video Pembelajaran -->
+                <div class="mb-8 bg-slate-900 rounded-2xl overflow-hidden shadow-xl aspect-video relative flex items-center justify-center group">
+                    <div class="absolute inset-0 bg-cover bg-center opacity-40" style="background-image: url('https://placehold.co/1200x600/1e293b/ffffff?text=Video+Pembelajaran+Sejarah');"></div>
+                    <div class="relative z-10 text-center p-6 space-y-4">
+                        <div class="w-16 h-16 bg-amber-600 text-white rounded-full flex items-center justify-center mx-auto text-2xl shadow-lg cursor-pointer hover:scale-110 transition" onclick="showToast('Memutar Video Pembelajaran Interaktif...', 'success')">
+                            <i class="fa-solid fa-play ml-1"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-white font-bold text-lg">Konsep Diakronik & Sinkronik dalam Sejarah</h4>
+                            <p class="text-xs text-slate-300">Video Pengantar Resmi Pembelajaran Kelas X</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Core Material Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                    <div class="bg-amber-50/50 dark:bg-amber-950/20 p-6 rounded-2xl border border-amber-200 dark:border-amber-900/50 space-y-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-amber-700 text-white rounded-xl flex items-center justify-center font-bold">D</div>
+                            <div>
+                                <h3 class="font-bold text-lg text-slate-900 dark:text-white">Cara Berpikir Diakronik</h3>
+                                <span class="text-xs text-amber-800 dark:text-amber-400 font-medium">Memanjang dalam waktu, menyempit dalam ruang</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                            Mempelajari peristiwa sejarah berdasarkan **urutan waktu (kronologis)** dari masa lampau ke masa berikutnya secara vertikal dan berkelanjutan.
+                        </p>
+                    </div>
+
+                    <div class="bg-indigo-50/50 dark:bg-indigo-950/20 p-6 rounded-2xl border border-indigo-200 dark:border-indigo-900/50 space-y-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-indigo-700 text-white rounded-xl flex items-center justify-center font-bold">S</div>
+                            <div>
+                                <h3 class="font-bold text-lg text-slate-900 dark:text-white">Cara Berpikir Sinkronik</h3>
+                                <span class="text-xs text-indigo-800 dark:text-indigo-400 font-medium">Memanjang dalam ruang, menyempit dalam waktu</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                            Menganalisis suatu struktur atau peristiwa sosial **pada waktu tertentu saja** secara meluas (horizontal) tanpa melihat urutan perkembangannya.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: ABSENSI KAMERA -->
+        <section id="tab-absensi" class="tab-content hidden space-y-8">
+            <div class="bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-sm border border-slate-200 dark:border-slate-700 max-w-3xl mx-auto">
+                <div class="text-center mb-8">
+                    <div class="w-14 h-14 bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-400 rounded-2xl flex items-center justify-center mx-auto text-2xl mb-3 shadow-inner">
+                        <i class="fa-solid fa-camera-retro"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white">Presensi Pintar (Absensi Kamera / Selfie)</h2>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">Ambil foto verifikasi wajah untuk mencatat kehadiran secara otomatis.</p>
+                </div>
+
+                <div class="space-y-4 mb-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase mb-1">Nama Lengkap Siswa</label>
+                            <input type="text" id="absent-name" placeholder="Contoh: Rian Anggara" class="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-sm focus:ring-2 focus:ring-amber-600 focus:outline-none text-slate-900 dark:text-white">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase mb-1">Kelas</label>
+                            <select id="absent-class" class="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-sm focus:ring-2 focus:ring-amber-600 focus:outline-none text-slate-900 dark:text-white">
+                                <option value="X IPS 1">X IPS 1</option>
+                                <option value="X IPS 2">X IPS 2</option>
+                                <option value="X MIPA 1">X MIPA 1</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-900 rounded-2xl overflow-hidden shadow-inner aspect-video relative flex items-center justify-center mb-6 border-4 border-slate-800">
+                    <video id="camera-feed" autoplay playsinline class="absolute inset-0 w-full h-full object-cover hidden"></video>
+                    <div id="camera-placeholder" class="text-center p-6 space-y-3">
+                        <i class="fa-solid fa-video-slash text-4xl text-slate-500"></i>
+                        <p class="text-xs text-slate-400">Kamera belum diaktifkan. Klik tombol di bawah untuk verifikasi wajah.</p>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap gap-3 justify-center mb-8">
+                    <button onclick="startCamera()" class="bg-amber-700 hover:bg-amber-800 text-white font-semibold px-6 py-3 rounded-xl text-sm transition flex items-center gap-2 shadow">
+                        <i class="fa-solid fa-camera"></i> Aktifkan Kamera
+                    </button>
+                    <button onclick="captureAttendance()" id="btn-capture" disabled class="bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-semibold px-6 py-3 rounded-xl text-sm transition flex items-center gap-2 shadow">
+                        <i class="fa-solid fa-check-circle"></i> Ambil Foto & Absen
+                    </button>
+                </div>
+
+                <div class="border-t border-slate-200 dark:border-slate-700 pt-6">
+                    <h3 class="font-bold text-slate-900 dark:text-white mb-4 text-sm flex items-center justify-between">
+                        <span>Daftar Kehadiran Hari Ini</span>
+                        <span id="attendance-count" class="text-xs bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-400 px-2.5 py-1 rounded-full font-semibold">0 Siswa Hadir</span>
+                    </h3>
+                    <div class="max-h-60 overflow-y-auto rounded-xl border border-slate-200 dark:border-slate-700">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead class="bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300 sticky top-0">
+                                <tr>
+                                    <th class="p-3">Waktu</th>
+                                    <th class="p-3">Nama Siswa</th>
+                                    <th class="p-3">Kelas</th>
+                                    <th class="p-3 text-center">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="attendance-list" class="divide-y divide-slate-100 dark:divide-slate-700">
+                                <tr class="text-slate-400 text-center"><td colspan="4" class="p-4 italic">Belum ada data absensi tercatat hari ini.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: RUANG DISKUSI -->
+        <section id="tab-diskusi" class="tab-content hidden space-y-8">
+            <div class="bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-sm border border-slate-200 dark:border-slate-700 max-w-4xl mx-auto">
+                <div class="mb-6 pb-4 border-b border-slate-100 dark:border-slate-700">
+                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white">Ruang Diskusi Kolaboratif</h2>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">Tempat bertanya dan bertukar pendapat mengenai materi sejarah.</p>
+                </div>
+
+                <div class="bg-slate-50 dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 mb-8 space-y-4">
+                    <h3 class="font-bold text-slate-900 dark:text-white text-sm">Buat Pertanyaan / Tanggapan Baru</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <input type="text" id="disc-author" placeholder="Nama Lengkap Anda" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-sm text-slate-900 dark:text-white">
+                        <select id="disc-topic" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-sm text-slate-900 dark:text-white">
+                            <option value="Pertanyaan Bab 1">Pertanyaan Bab 1</option>
+                            <option value="Diskusi Contoh Kasus">Diskusi Contoh Kasus</option>
+                        </select>
+                    </div>
+                    <textarea id="disc-content" rows="3" placeholder="Tuliskan pendapat atau pertanyaan Anda..." class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-sm text-slate-900 dark:text-white resize-none"></textarea>
+                    <div class="flex justify-end">
+                        <button onclick="postDiscussion()" class="bg-amber-700 hover:bg-amber-800 text-white font-semibold px-6 py-2.5 rounded-xl text-sm transition shadow flex items-center gap-2">
+                            <i class="fa-solid fa-paper-plane"></i> Kirim Diskusi
+                        </button>
+                    </div>
+                </div>
+
+                <div id="discussion-feed" class="space-y-4">
+                    <!-- Default discussion -->
+                    <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-3">
+                        <div class="flex items-center justify-between">
+                            <h4 class="font-bold text-sm text-slate-900 dark:text-white">Fatimah Az-Zahra <span class="text-xs font-normal text-slate-500">(X IPS 1)</span></h4>
+                            <span class="text-xs text-slate-400">Hari ini, 10:15</span>
+                        </div>
+                        <p class="text-sm text-slate-700 dark:text-slate-300">Bagaimana membedakan secara cepat antara pendekatan diakronik dan sinkronik dalam soal ujian?</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 5: EVALUASI & LEADERBOARD -->
+        <section id="tab-evaluasi" class="tab-content hidden space-y-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-2 bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-100 dark:border-slate-700">
+                            <h2 class="text-2xl font-bold text-slate-900 dark:text-white">Kuis Interaktif Bab 1</h2>
+                            <span id="quiz-progress" class="text-xs font-bold text-slate-500 bg-slate-100 dark:bg-slate-900 px-3 py-1.5 rounded-full">Soal 1 dari 3</span>
+                        </div>
+                        <div id="quiz-container" class="space-y-6"></div>
+                    </div>
+                    <div class="mt-8 pt-4 border-t border-slate-100 dark:border-slate-700 flex justify-between items-center">
+                        <button id="quiz-prev-btn" onclick="prevQuizQuestion()" class="px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-200 rounded-xl text-sm font-semibold disabled:opacity-40" disabled>Sebelumnya</button>
+                        <button id="quiz-next-btn" onclick="nextQuizQuestion()" class="px-6 py-2 bg-amber-700 hover:bg-amber-800 text-white rounded-xl text-sm font-semibold transition">Selanjutnya</button>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col">
+                    <h3 class="font-bold text-slate-900 dark:text-white text-lg mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-trophy text-amber-500"></i> Papan Peringkat
+                    </h3>
+                    <div id="leaderboard-list" class="space-y-3 flex-grow overflow-y-auto max-h-[380px]"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 6: AI VIRTUAL TUTOR CHATBOT -->
+        <section id="tab-ai" class="tab-content hidden space-y-8">
+            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 max-w-3xl mx-auto flex flex-col h-[650px] overflow-hidden">
+                <!-- Chat Header -->
+                <div class="p-6 bg-gradient-to-r from-amber-900 to-amber-950 text-white flex items-center gap-4">
+                    <div class="w-12 h-12 bg-amber-700 rounded-2xl flex items-center justify-center text-xl shadow">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <div>
+                        <h2 class="font-bold text-lg">Asisten AI Virtual Tutor Sejarah</h2>
+                        <p class="text-xs text-amber-200">Tanya apa saja seputar Diakronik dan Sinkronik (Aktif 24/7)</p>
+                    </div>
+                </div>
+
+                <!-- Chat Messages Body -->
+                <div id="chat-messages" class="flex-grow p-6 overflow-y-auto space-y-4 bg-slate-50 dark:bg-slate-900">
+                    <div class="flex items-start gap-3">
+                        <div class="w-8 h-8 rounded-full bg-amber-700 text-white flex items-center justify-center text-xs font-bold">AI</div>
+                        <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 max-w-lg text-sm text-slate-700 dark:text-slate-300">
+                            Halo! Saya Asisten AI Sejarah Anda. Ada yang ingin ditanyakan mengenai perbedaan berpikir diakronik dan sinkronik?
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chat Input Footer -->
+                <div class="p-4 bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 flex gap-3 items-center">
+                    <input type="text" id="chat-input" placeholder="Tulis pertanyaan Anda di sini..." class="flex-grow px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-600" onkeypress="if(event.key === 'Enter') sendAIChat()">
+                    <button onclick="sendAIChat()" class="bg-amber-700 hover:bg-amber-800 text-white px-6 py-3 rounded-xl font-semibold text-sm transition shadow flex items-center gap-2">
+                        <i class="fa-solid fa-paper-plane"></i> Kirim
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 7: PANEL GURU (ADMIN) -->
+        <section id="tab-admin" class="tab-content hidden space-y-8">
+            <div class="bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-sm border border-slate-200 dark:border-slate-700">
+                <div class="mb-6 pb-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center">
+                    <div>
+                        <span class="text-xs font-semibold text-amber-700 bg-amber-50 px-3 py-1 rounded-full border border-amber-200">Admin Control</span>
+                        <h2 class="text-2xl font-bold text-slate-900 dark:text-white mt-1">Panel Pengelolaan Guru</h2>
+                    </div>
+                    <span class="text-xs bg-amber-100 text-amber-800 font-bold px-3 py-1.5 rounded-lg">Akses: Dr. Budi Sejarah</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-amber-50 dark:bg-slate-900 p-6 rounded-2xl border border-amber-200 dark:border-slate-700 text-center">
+                        <span class="text-3xl font-extrabold text-amber-800 dark:text-amber-400" id="stat-attendance-count">0</span>
+                        <p class="text-xs font-semibold text-slate-600 dark:text-slate-400 mt-1">Total Absensi Hari Ini</p>
+                    </div>
+                    <div class="bg-indigo-50 dark:bg-slate-900 p-6 rounded-2xl border border-indigo-200 dark:border-slate-700 text-center">
+                        <span class="text-3xl font-extrabold text-indigo-700 dark:text-indigo-400" id="stat-quiz-takers">4</span>
+                        <p class="text-xs font-semibold text-slate-600 dark:text-slate-400 mt-1">Peserta Kuis Selesai</p>
+                    </div>
+                    <div class="bg-emerald-50 dark:bg-slate-900 p-6 rounded-2xl border border-emerald-200 dark:border-slate-700 text-center">
+                        <span class="text-3xl font-extrabold text-emerald-700 dark:text-emerald-400">Aktif</span>
+                        <p class="text-xs font-semibold text-slate-600 dark:text-slate-400 mt-1">Status Sistem LMS</p>
+                    </div>
+                </div>
+
+                <!-- Admin Action Management -->
+                <div class="space-y-6">
+                    <h3 class="font-bold text-slate-900 dark:text-white text-base">Kelola Materi & Pengumuman Kelas</h3>
+                    <div class="flex gap-4">
+                        <input type="text" id="admin-announcement" placeholder="Tulis pengumuman baru untuk siswa..." class="flex-grow px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-sm text-slate-900 dark:text-white">
+                        <button onclick="postAnnouncement()" class="bg-slate-900 dark:bg-slate-700 hover:bg-slate-800 text-white px-6 py-3 rounded-xl font-semibold text-sm transition">
+                            Kirim Pengumuman
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 mt-12 py-8 text-center text-xs text-slate-500 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 space-y-2">
+            <p class="font-medium text-slate-700 dark:text-slate-300">LMS Sejarah: Diakronik & Sinkronik</p>
+            <p>&copy; 2026 Dr. Budi Sejarah, M.Pd. | Dirancang untuk GitHub Pages.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Dark Mode Controller ---
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const themeIcon = document.getElementById('theme-icon');
+            html.classList.toggle('dark');
+            if (html.classList.contains('dark')) {
+                themeIcon.className = 'fa-solid fa-sun text-base text-amber-400';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                themeIcon.className = 'fa-solid fa-moon text-base text-slate-600';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Initialize Theme from localStorage
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.classList.add('dark');
+            document.getElementById('theme-icon').className = 'fa-solid fa-sun text-base text-amber-400';
+        }
+
+        // --- Role-Based Login System ---
+        let currentUser = {
+            name: "Rian Anggara",
+            role: "siswa"
+        };
+
+        function handleLogin() {
+            const usernameInput = document.getElementById('login-username').value.trim();
+            const roleSelect = document.getElementById('login-role').value;
+
+            if (usernameInput) {
+                currentUser.name = usernameInput;
+            } else {
+                currentUser.name = roleSelect === 'guru' ? 'Dr. Budi Sejarah, M.Pd.' : 'Rian Anggara';
+            }
+            currentUser.role = roleSelect;
+
+            // Update UI Badge
+            document.getElementById('user-badge-name').textContent = currentUser.name;
+            document.getElementById('user-badge-role').textContent = currentUser.role === 'guru' ? 'Guru / Admin' : 'Peserta Didik';
+            document.getElementById('user-badge-avatar').src = currentUser.role === 'guru' 
+                ? 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=150' 
+                : 'https://placehold.co/100x100/b45309/ffffff?text=R';
+
+            // Show/Hide Admin Tab
+            const adminBtn = document.getElementById('nav-admin-btn');
+            const mobileAdminBtn = document.getElementById('mobile-admin-btn');
+            if (currentUser.role === 'guru') {
+                adminBtn.classList.remove('hidden');
+                mobileAdminBtn.classList.remove('hidden');
+                showToast('Selamat datang, Guru! Panel Admin aktif.', 'success');
+            } else {
+                adminBtn.classList.add('hidden');
+                mobileAdminBtn.classList.add('hidden');
+                showToast(`Selamat datang, ${currentUser.name}!`, 'success');
+            }
+
+            // Close Modal
+            document.getElementById('login-modal').classList.add('hidden');
+        }
+
+        // --- Navigation Tabs ---
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('text-amber-700', 'bg-amber-50', 'dark:bg-slate-800', 'font-bold');
+                if(btn.getAttribute('data-target') === tabId) {
+                    btn.classList.add('text-amber-700', 'bg-amber-50', 'dark:bg-slate-800', 'font-bold');
+                }
+            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+
+        // --- Toast Notification ---
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const msgEl = document.getElementById('toast-message');
+            const iconEl = document.getElementById('toast-icon');
+
+            msgEl.textContent = message;
+            toast.className = `fixed top-5 right-5 z-50 transform transition-transform duration-300 text-white px-6 py-3 rounded-xl shadow-2xl flex items-center gap-3 ${type === 'success' ? 'bg-emerald-600' : 'bg-amber-600'}`;
+            iconEl.className = type === 'success' ? 'fa-solid fa-circle-check text-xl' : 'fa-solid fa-circle-info text-xl';
+
+            toast.classList.remove('translate-x-full');
+            setTimeout(() => { toast.classList.add('translate-x-full'); }, 3500);
+        }
+
+        // --- Camera Attendance ---
+        let attendanceRecords = [];
+        async function startCamera() {
+            const video = document.getElementById('camera-feed');
+            const placeholder = document.getElementById('camera-placeholder');
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                video.srcObject = stream;
+                video.classList.remove('hidden');
+                placeholder.classList.add('hidden');
+                document.getElementById('btn-capture').removeAttribute('disabled');
+                showToast('Kamera aktif!', 'success');
+            } catch (err) {
+                placeholder.innerHTML = `<i class="fa-solid fa-face-smile text-5xl text-amber-500 mb-2"></i><p class="text-xs text-amber-200">Mode Simulasi Kamera Aktif (Face Captured)</p>`;
+                document.getElementById('btn-capture').removeAttribute('disabled');
+                showToast('Simulasi kamera siap!', 'info');
+            }
+        }
+
+        function captureAttendance() {
+            const name = document.getElementById('absent-name').value.trim() || currentUser.name;
+            const cls = document.getElementById('absent-class').value;
+            const time = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+
+            attendanceRecords.unshift({ time, name, className: cls, status: 'Hadir' });
+            renderAttendanceList();
+            showToast(`Absensi ${name} berhasil dicatat!`, 'success');
+        }
+
+        function renderAttendanceList() {
+            const list = document.getElementById('attendance-list');
+            document.getElementById('attendance-count').textContent = `${attendanceRecords.length} Siswa Hadir`;
+            document.getElementById('stat-attendance-count').textContent = attendanceRecords.length;
+
+            if(attendanceRecords.length === 0) {
+                list.innerHTML = `<tr class="text-slate-400 text-center"><td colspan="4" class="p-4 italic">Belum ada data absensi.</td></tr>`;
+                return;
+            }
+            let html = '';
+            attendanceRecords.forEach(r => {
+                html += `<tr class="hover:bg-slate-50 dark:hover:bg-slate-900 transition"><td class="p-3">${r.time}</td><td class="p-3 font-bold">${r.name}</td><td class="p-3">${r.className}</td><td class="p-3 text-center"><span class="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full text-[10px]">Hadir</span></td></tr>`;
+            });
+            list.innerHTML = html;
+        }
+
+        // --- Discussion ---
+        function postDiscussion() {
+            const author = document.getElementById('disc-author').value.trim() || currentUser.name;
+            const topic = document.getElementById('disc-topic').value;
+            const content = document.getElementById('disc-content').value.trim();
+
+            if(!content) { showToast('Tuliskan isi diskusi!', 'error'); return; }
+
+            const feed = document.getElementById('discussion-feed');
+            feed.insertAdjacentHTML('afterbegin', `
+                <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-3">
+                    <div class="flex items-center justify-between"><h4 class="font-bold text-sm text-slate-900 dark:text-white">${author}</h4><span class="text-xs text-slate-400">Baru saja</span></div>
+                    <p class="text-sm text-slate-700 dark:text-slate-300">${content}</p>
+                </div>
+            `);
+            document.getElementById('disc-content').value = '';
+            showToast('Diskusi terkirim!', 'success');
+        }
+
+        // --- Quiz & Leaderboard ---
+        const quizQuestions = [
+            { question: "Cara berpikir sejarah yang memanjang dalam waktu (kronologis) disebut...", options: ["A. Sinkronik", "B. Diakronik", "C. Sosiologis", "D. Ruang"], answer: 1 },
+            { question: "Analisis struktur sosial pada waktu tertentu secara meluas disebut...", options: ["A. Diakronik", "B. Sinkronik", "C. Diachronic", "D. Kronologi"], answer: 1 }
+        ];
+        let currQ = 0, answers = {}, leaderboard = [{ rank: 1, name: "Aurel Widya", score: 100 }];
+
+        function renderQuiz() {
+            const container = document.getElementById('quiz-container');
+            const q = quizQuestions[currQ];
+            let opts = '';
+            q.options.forEach((opt, idx) => {
+                opts += `<label class="flex items-center gap-3 p-4 rounded-xl border border-slate-200 dark:border-slate-700 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-900"><input type="radio" name="q" value="${idx}" ${answers[currQ]===idx?'checked':''} onclick="answers[currQ]=${idx}"><span>${opt}</span></label>`;
+            });
+            container.innerHTML = `<h3 class="font-bold text-base text-slate-900 dark:text-white">${currQ+1}. ${q.question}</h3><div class="space-y-2">${opts}</div>`;
+            document.getElementById('quiz-progress').textContent = `Soal ${currQ+1} dari ${quizQuestions.length}`;
+        }
+
+        function nextQuizQuestion() {
+            if(currQ < quizQuestions.length - 1) { currQ++; renderQuiz(); }
+            else {
+                let score = 100;
+                leaderboard.push({ rank: 0, name: currentUser.name, score });
+                leaderboard.sort((a,b)=>b.score-a.score);
+                leaderboard.forEach((item, idx)=>item.rank=idx+1);
+                renderLeaderboard();
+                showToast(`Kuis Selesai! Skor Anda: ${score}`, 'success');
+                currQ = 0; renderQuiz();
+            }
+        }
+        function prevQuizQuestion() { if(currQ>0) { currQ--; renderQuiz(); } }
+
+        function renderLeaderboard() {
+            const list = document.getElementById('leaderboard-list');
+            let html = '';
+            leaderboard.forEach(item => {
+                html += `<div class="flex items-center justify-between p-3 rounded-xl border border-slate-100 dark:border-slate-700"><div class="flex items-center gap-3"><div class="w-7 h-7 bg-amber-600 text-white rounded-full flex items-center justify-center font-bold text-xs">${item.rank}</div><span class="font-bold text-xs text-slate-900 dark:text-white">${item.name}</span></div><span class="font-extrabold text-xs text-amber-700">${item.score} Pts</span></div>`;
+            });
+            list.innerHTML = html;
+        }
+
+        // --- AI Virtual Tutor Chatbot ---
+        function sendAIChat() {
+            const input = document.getElementById('chat-input');
+            const msgBox = document.getElementById('chat-messages');
+            const txt = input.value.trim();
+            if(!txt) return;
+
+            msgBox.innerHTML += `<div class="flex items-start justify-end gap-3"><div class="bg-amber-700 text-white p-4 rounded-2xl shadow-sm max-w-lg text-sm">${txt}</div></div>`;
+            input.value = '';
+
+            setTimeout(() => {
+                let reply = "Diakronik fokus pada proses dan urutan waktu (vertikal), sedangkan sinkronik fokus pada struktur dan kondisi dalam satu waktu tertentu (horizontal). Ada yang ingin ditanyakan lagi?";
+                if(txt.toLowerCase().includes('contoh')) {
+                    reply = "Contoh diakronik: Perang Diponegoro (1825-1830). Contoh sinkronik: Suasana sosial ekonomi Indonesia saat krisis moneter tahun 1998.";
+                }
+                msgBox.innerHTML += `<div class="flex items-start gap-3"><div class="w-8 h-8 rounded-full bg-amber-700 text-white flex items-center justify-center text-xs font-bold">AI</div><div class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 max-w-lg text-sm text-slate-700 dark:text-slate-300">${reply}</div></div>`;
+                msgBox.scrollTop = msgBox.scrollHeight;
+            }, 600);
+        }
+
+        function postAnnouncement() {
+            const val = document.getElementById('admin-announcement').value;
+            if(val) { showToast('Pengumuman kelas berhasil disiarkan!', 'success'); document.getElementById('admin-announcement').value = ''; }
+        }
+
+        window.onload = function() {
+            renderQuiz();
+            renderLeaderboard();
+            renderAttendanceList();
+        };
+    </script>
+</body>
+</html>
