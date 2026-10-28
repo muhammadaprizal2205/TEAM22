@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sejarah | Diakronik & Sinkronik</title>
+  <style>
+    :root{
+      --primary:#123a6d;
+      --primary-dark:#0e2a4d;
+      --secondary:#f3b63f;
+      --soft:#edf4ff;
+      --light:#ffffff;
+      --text:#1f2937;
+      --muted:#64748b;
+      --success:#22c55e;
+      --danger:#ef4444;
+      --shadow:0 15px 35px rgba(17,24,39,.08);
+      --radius:20px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background:linear-gradient(180deg,#f8fbff 0%,#eef4fd 100%);
+      color:var(--text);
+      line-height:1.7;
+    }
+
+    a{text-decoration:none;color:inherit}
+    img{max-width:100%}
+
+    .container{
+      width:min(1200px, calc(100% - 32px));
+      margin:0 auto;
+    }
+
+    header{
+      position:sticky;
+      top:0;
+      z-index:1000;
+      background:rgba(255,255,255,.9);
+      backdrop-filter:blur(12px);
+      border-bottom:1px solid rgba(18,58,109,.08);
+    }
+
+    .nav{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      min-height:72px;
+      gap:20px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      font-weight:800;
+      color:var(--primary);
+      letter-spacing:.02em;
+    }
+
+    .brand-mark{
+      width:42px;
+      height:42px;
+      border-radius:12px;
+      background:linear-gradient(135deg, var(--primary), #2f6ed5);
+      display:grid;
+      place-items:center;
+      color:white;
+      font-size:22px;
+      box-shadow:var(--shadow);
+    }
+
+    .nav-links{
+      display:flex;
+      gap:18px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+
+    .nav-links a{
+      color:var(--text);
+      font-weight:600;
+      opacity:.85;
+      transition:.2s ease;
+    }
+
+    .nav-links a:hover{opacity:1;color:var(--primary)}
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:none;
+      border-radius:999px;
+      padding:14px 22px;
+      font-weight:700;
+      cursor:pointer;
+      transition:.2s ease;
+      box-shadow:0 8px 20px rgba(18,58,109,.18);
+    }
+    .btn-primary{
+      background:linear-gradient(135deg, var(--primary), #2b5ca8);
+      color:white;
+    }
+    .btn-primary:hover{transform:translateY(-1px)}
+    .btn-secondary{
+      background:white;
+      color:var(--primary);
+      border:1px solid rgba(18,58,109,.15);
+    }
+
+    .hero{
+      padding:72px 0 36px;
+      position:relative;
+    }
+
+    .hero-wrap{
+      display:grid;
+      grid-template-columns:1.2fr .8fr;
+      gap:36px;
+      align-items:center;
+    }
+
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 14px;
+      background:rgba(18,58,109,.08);
+      border:1px solid rgba(18,58,109,.1);
+      border-radius:999px;
+      font-size:.8rem;
+      font-weight:700;
+      color:var(--primary);
+      margin-bottom:18px;
+    }
+
+    h1{
+      font-size:clamp(2.2rem, 4vw, 4.2rem);
+      line-height:1.12;
+      margin:0 0 18px;
+      color:var(--primary-dark);
+    }
+
+    .lead{
+      font-size:1.07rem;
+      color:var(--muted);
+      max-width:620px;
+      margin-bottom:28px;
+    }
+
+    .cta-row{
+      display:flex;
+      gap:14px;
+      flex-wrap:wrap;
+      margin-bottom:22px;
+    }
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(120px,1fr));
+      gap:18px;
+      max-width:560px;
+    }
+
+    .stat{
+      background:white;
+      border:1px solid rgba(18,58,109,.08);
+      border-radius:16px;
+      box-shadow:var(--shadow);
+      padding:18px 16px;
+    }
+
+    .stat strong{
+      display:block;
+      font-size:1.5rem;
+      color:var(--primary);
+    }
+    .stat span{
+      color:var(--muted);
+      font-size:.92rem;
+    }
+
+    .hero-card{
+      background:linear-gradient(180deg, #ffffff 0%, #eef6ff 100%);
+      border-radius:30px;
+      border:1px solid rgba(18,58,109,.08);
+      box-shadow:0 28px 55px rgba(18,58,109,.12);
+      overflow:hidden;
+    }
+
+    .mini-header{
+      padding:18px 22px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      background:linear-gradient(90deg,#0e2a4d,#123a6d);
+      color:white;
+      font-weight:700;
+    }
+
+    .mini-body{
+      padding:22px;
+    }
+
+    .teacher-badge{
+      display:inline-block;
+      background:rgba(243,182,63,.15);
+      color:#9b6600;
+      border:1px solid rgba(243,182,63,.2);
+      border-radius:999px;
+      font-size:.8rem;
+      font-weight:700;
+      padding:7px 12px;
+      margin-bottom:18px;
+    }
+
+    .teacher-card{
+      padding:18px;
+      border-radius:18px;
+      background:white;
+      border:1px solid rgba(18,58,109,.08);
+      box-shadow:var(--shadow);
+    }
+
+    .teacher-card .row{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      margin-bottom:14px;
+    }
+
+    .avatar{
+      width:62px;
+      height:62px;
+      border-radius:50%;
+      background:linear-gradient(135deg,#f3b63f,#ffdf97);
+      display:grid;
+      place-items:center;
+      font-weight:900;
+      color:#3b2d00;
+      box-shadow:inset 0 0 0 3px rgba(255,255,255,.5);
+    }
+
+    .teacher-name{
+      font-weight:800;
+      color:var(--primary-dark);
+      margin:0 0 2px;
+      font-size:1.1rem;
+    }
+
+    .teacher-role{
+      margin:0;
+      font-size:.82rem;
+      color:var(--muted);
+    }
+
+    .quote{
+      margin:16px 0 0;
+      padding:14px 16px;
+      border-left:4px solid var(--secondary);
+      background:#fffaf0;
+      border-radius:0 12px 12px 0;
+      color:#7c5b18;
+      font-style:italic;
+    }
+
+    section{
+      padding:34px 0;
+    }
+
+    .section-head{
+      margin-bottom:26px;
+    }
+
+    .section-head small{
+      display:block;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      font-weight:800;
+      color:#5d7fb6;
+      margin-bottom:8px;
+    }
+
+    h2{
+      margin:0;
+      font-size:clamp(1.8rem,3vw,2.7rem);
+      color:var(--primary-dark);
+    }
+
+    .about-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:26px;
+    }
+
+    .card{
+      background:white;
+      border-radius:20px;
+      padding:24px;
+      border:1px solid rgba(18,58,109,.08);
+      box-shadow:var(--shadow);
+    }
+
+    .card h3{
+      margin-top:0;
+      color:var(--primary-dark);
+      font-size:1.28rem;
+    }
+
+    ul.checklist{
+      list-style:none;
+      padding:0;
+      margin:18px 0 0;
+    }
+
+    ul.checklist li{
+      position:relative;
+      padding-left:28px;
+      margin-bottom:12px;
+      color:var(--text);
+      font-weight:600;
+    }
+
+    ul.checklist li::before{
+      content:"✓";
+      position:absolute;
+      left:0;
+      top:0;
+      width:18px;
+      height:18px;
+      border-radius:50%;
+      background:rgba(34,197,94,.1);
+      color:var(--success);
+      display:grid;
+      place-items:center;
+      font-weight:900;
+      font-size:.8rem;
+    }
+
+    .cp-tp{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:26px;
+    }
+
+    .badge-box{
+      display:inline-flex;
+      border-radius:999px;
+      padding:7px 12px;
+      background:rgba(18,58,109,.08);
+      color:var(--primary);
+      font-weight:700;
+      font-size:.82rem;
+      margin-bottom:12px;
+    }
+
+    .objective-list{
+      list-style:none;
+      padding:0;
+      margin:12px 0 0;
+    }
+    .objective-list li{
+      margin-bottom:10px;
+      padding-left:24px;
+      position:relative;
+      color:var(--text);
+      font-weight:600;
+    }
+    .objective-list li::before{
+      content:"→";
+      position:absolute;
+      left:0;
+      color:var(--primary);
+      font-weight:900;
+    }
+
+    .concept-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:26px;
+    }
+
+    .concept-box{
+      background:linear-gradient(180deg, #ffffff 0%, #f6f9ff 100%);
+      border-radius:20px;
+      border:1px solid rgba(18,58,109,.08);
+      padding:24px;
+      box-shadow:var(--shadow);
+    }
+
+    .concept-tag{
+      display:inline-block;
+      background:rgba(18,58,109,.08);
+      color:var(--primary);
+      padding:7px 12px;
+      border-radius:999px;
+      font-size:.75rem;
+      font-weight:800;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+      margin-bottom:12px;
+    }
+
+    .concept-box h3{
+      margin:0 0 12px;
+      color:var(--primary-dark);
+      font-size:1.35rem;
+    }
+
+    .comparison-table{
+      width:100%;
+      border-collapse:collapse;
+      margin-top:18px;
+      border-radius:18px;
+      overflow:hidden;
+      box-shadow:var(--shadow);
+      background:white;
+    }
+
+    .comparison-table th,
+    .comparison-table td{
+      padding:16px 18px;
+      border:1px solid rgba(18,58,109,.1);
+      text-align:left;
+      vertical-align:top;
+    }
+
+    .comparison-table thead th{
+      background:linear-gradient(90deg,#123a6d,#214d8d);
+      color:white;
+      font-size:.96rem;
+    }
+
+    .comparison-table tbody tr:nth-child(odd){
+      background:#fafcff;
+    }
+
+    .video-list{
+      list-style:none;
+      padding:0;
+      margin:18px 0 0;
+      display:grid;
+      gap:16px;
+    }
+
+    .video-list li{
+      background:linear-gradient(180deg,#f8fbff,#eef4fd);
+      border:1px solid rgba(18,58,109,.08);
+      border-radius:16px;
+      padding:16px 18px;
+    }
+
+    .video-list strong{
+      color:var(--primary-dark);
+      display:block;
+      margin-bottom:5px;
+    }
+
+    .map-concept{
+      background:linear-gradient(180deg,#ffffff,#f7fbff);
+      border-radius:20px;
+      box-shadow:var(--shadow);
+      border:1px solid rgba(18,58,109,.08);
+      padding:22px;
+      margin-top:20px;
+    }
+
+    .tree{
+      list-style:none;
+      margin:0;
+      padding:0;
+      line-height:1.9;
+      color:var(--text);
+      font-weight:600;
+    }
+
+    .tree ul{
+      list-style:none;
+      margin-left:18px;
+      padding-left:18px;
+      border-left:2px solid rgba(18,58,109,.12);
+    }
+
+    .tree li::before{
+      content:"";
+      display:inline-block;
+      width:10px;
+      height:10px;
+      margin-right:10px;
+      border-radius:50%;
+      background:linear-gradient(135deg, var(--primary), #5f89d7);
+      vertical-align:middle;
+    }
+
+    .two-col{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:26px;
+    }
+
+    .feature-list{
+      list-style:none;
+      padding:0;
+      margin:16px 0 0;
+    }
+    .feature-list li{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      margin-bottom:12px;
+      color:var(--text);
+    }
+
+    .feature-list li .dot{
+      width:12px;
+      height:12px;
+      border-radius:50%;
+      background:linear-gradient(135deg,var(--secondary),#ffd36d);
+      margin-top:8px;
+      flex-shrink:0;
+    }
+
+    .quiz-box{
+      background:linear-gradient(180deg,#ffffff,#f3f8ff);
+      border:1px solid rgba(18,58,109,.08);
+      border-radius:18px;
+      padding:22px;
+      box-shadow:var(--shadow);
+    }
+
+    .quiz-item{
+      border:1px solid rgba(18,58,109,.08);
+      border-radius:14px;
+      padding:16px 18px;
+      background:white;
+      margin-bottom:16px;
+    }
+
+    .quiz-question{
+      font-weight:700;
+      color:var(--primary-dark);
+      margin-bottom:12px;
+    }
+
+    .options{
+      display:grid;
+      gap:8px;
+      margin-top:12px;
+    }
+
+    .option{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      background:#f8fbff;
+      border:1px solid rgba(18,58,109,.08);
+      border-radius:10px;
+      padding:10px 12px;
+      cursor:pointer;
+      transition:.15s ease;
+    }
+
+    .option:hover{
+      border-color:rgba(18,58,109,.2);
+      background:#f1f7ff;
+    }
+
+    .option input{accent-color:var(--primary)}
+    .answer{
+      display:none;
+      margin-top:12px;
+      border-left:4px solid var(--success);
+      background:rgba(34,197,94,.06);
+      color:#166534;
+      padding:10px 12px;
+      border-radius:8px;
+      font-weight:700;
+    }
+
+    .leaderboard{
+      display:grid;
+      gap:12px;
+      margin-top:20px;
+    }
+
+    .leader-row{
+      display:grid;
+      grid-template-columns:50px 1fr 120px;
+      align-items:center;
+      gap:12px;
+      background:white;
+      border:1px solid rgba(18,58,109,.08);
+      border-radius:12px;
+      padding:12px 14px;
+      box-shadow:var(--shadow);
+    }
+
+    .rank{
+      width:34px;
+      height:34px;
+      display:grid;
+      place-items:center;
+      border-radius:50%;
+      background:linear-gradient(135deg,var(--primary),#4c86d9);
+      color:white;
+      font-weight:800;
+    }
+
+    .leader-row:nth-child(1) .rank{background:linear-gradient(135deg,#f7c948,#f0a500)}
+    .leader-row:nth-child(2) .rank{background:linear-gradient(135deg,#c1c6d4,#8c97b1)}
+    .leader-row:nth-child(3) .rank{background:linear-gradient(135deg,#d5a57b,#b7774a)}
+
+    .name{
+      font-weight:800;
+      color:var(--primary-dark);
+    }
+
+    .score{
+      justify-self:end;
+      background:rgba(18,58,109,.06);
+      color:var(--primary);
+      padding:8px 12px;
+      border-radius:999px;
+      font-weight:800;
+    }
+
+    .chatbot{
+      background:linear-gradient(135deg,#0f2f56,#1c4d82);
+      color:white;
+      border-radius:22px;
+      overflow:hidden;
+      box-shadow:0 25px 60px rgba(12,32,56,.18);
+    }
+
+    .chat-header{
+      padding:18px 20px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      border-bottom:1px solid rgba(255,255,255,.1);
+      background:rgba(255,255,255,.03);
+    }
+
+    .chat-bot{
+      display:flex; gap:12px; align-items:center; font-weight:700;
+    }
+    .bot-icon{
+      width:38px; height:38px; border-radius:50%;
+      display:grid; place-items:center;
+      background:linear-gradient(135deg,#f3b63f,#ffd66d); color:#3c2c00; font-weight:900;
+    }
+
+    .chat-status{
+      font-size:.8rem; opacity:.85; font-weight:600;
+    }
+
+    .chat-body{
+      padding:20px;
+      display:grid;
+      gap:12px;
+      min-height:230px;
+    }
+
+    .msg{
+      max-width:78%;
+      padding:12px 14px;
+      border-radius:16px;
+      font-size:.96rem;
+      line-height:1.5;
+    }
+    .msg.user{
+      background:rgba(255,255,255,.12);
+      color:#edf5ff;
+      justify-self:end;
+      border-bottom-right-radius:6px;
+    }
+    .msg.bot{
+      background:rgba(255,255,255,.08);
+      color:#edf5ff;
+      justify-self:start;
+      border-bottom-left-radius:6px;
+    }
+
+    .quick-questions{
+      display:flex; flex-wrap:wrap; gap:10px; margin-top:10px;
+    }
+
+    .pill{
+      border:1px solid rgba(255,255,255,.14);
+      color:white;
+      background:rgba(255,255,255,.04);
+      border-radius:999px;
+      padding:7px 12px;
+      font-size:.8rem;
+      font-weight:600;
+      cursor:pointer;
+    }
+
+    .user-role{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:26px;
+      margin-top:14px;
+    }
+
+    .role-panel{
+      background:white; border:1px solid rgba(18,58,109,.08);
+      border-radius:20px; padding:22px; box-shadow:var(--shadow);
+    }
+
+    .role-panel h3{
+      margin-top:0;
+      color:var(--primary-dark);
+    }
+
+    .role-panel ul{
+      list-style:none;
+      padding:0; margin:12px 0 0;
+    }
+    .role-panel li{
+      position:relative;
+      padding-left:24px;
+      margin-bottom:10px;
+      color:var(--text);
+      font-weight:600;
+    }
+    .role-panel li::before{
+      content:"•";
+      position:absolute;
+      left:0;
+      color:var(--primary);
+      font-size:1.5rem;
+      top:-4px;
+    }
+
+    footer{
+      padding:40px 0 60px;
+      text-align:center;
+      color:var(--muted);
+      font-weight:600;
+    }
+
+    @media (max-width: 900px){
+      .hero-wrap, .about-grid, .concept-grid, .cp-tp, .two-col, .user-role{
+        grid-template-columns:1fr;
+      }
+      .nav{
+        padding:12px 0;
+        align-items:flex-start;
+        flex-direction:column;
+      }
+      .stats{
+        grid-template-columns:1fr;
+      }
+      .nav-links{
+        gap:10px 14px;
+      }
+    }
+
+    @media (max-width: 520px){
+      .btn{width:100%}
+      .cta-row{flex-direction:column}
+      .leader-row{
+        grid-template-columns:40px 1fr auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <div class="brand">
+        <div class="brand-mark">H</div>
+        <span>Sejarah Digital</span>
+      </div>
+
+      <nav class="nav-links">
+        <a href="#profil">Profil</a>
+        <a href="#tujuan">Tujuan</a>
+        <a href="#materi">Materi</a>
+        <a href="#presensi">Presensi</a>
+        <a href="#diskusi">Diskusi</a>
+        <a href="#evaluasi">Evaluasi</a>
+        <a href="#ai">AI Tutor</a>
+      </nav>
+
+      <button class="btn btn-primary">Masuk LMS</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-wrap">
+        <div>
+          <div class="eyebrow">📚 Mata Pelajaran Sejarah | Kelas X</div>
+          <h1>Perbedaan Berpikir <br>Diakronik dan Sinkronik</h1>
+          <p class="lead">
+            Mempelajari sejarah bukan sekadar menghafal tanggal, tetapi memahami proses, perubahan, ruang, dan kondisi peristiwa. Di sini siswa akan belajar bagaimana membedakan cara berpikir sejarah secara kronologis dan menyeluruh.
+          </p>
+
+          <div class="cta-row">
+            <a href="#materi" class="btn btn-primary">Mulai Belajar</a>
+            <a href="#evaluasi" class="btn btn-secondary">Lihat Kuis</a>
+          </div>
+
+          <div class="stats">
+            <div class="stat">
+              <strong>2</strong>
+              <span>Pendekatan Utama</span>
+            </div>
+            <div class="stat">
+              <strong>7</strong>
+              <span>Bagian Pembelajaran</span>
+            </div>
+            <div class="stat">
+              <strong>24/7</strong>
+              <span>AI Tutor</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-card">
+          <div class="mini-header">
+            <span>Profil Guru</span>
+            <span>Sejarah</span>
+          </div>
+          <div class="mini-body">
+            <div class="teacher-badge">Guru Berpengalaman</div>
+
+            <div class="teacher-card">
+              <div class="row">
+                <div class="avatar">GS</div>
+                <div>
+                  <p class="teacher-name">Guru Sejarah</p>
+                  <p class="teacher-role">Pengajar • Mentor • Inspirator</p>
+                </div>
+              </div>
+
+              <p style="margin:0; color:var(--muted);">
+                Sejarah bukan hanya masa lalu, tetapi jendela untuk memahami diri, bangsa, dan masa depan.
+              </p>
+
+              <div class="quote">
+                “Belajar sejarah bukan sekadar mengingat peristiwa, tetapi melatih kita untuk berpikir, menilai, dan mengambil pelajaran dari perjalanan manusia.”
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="profil">
+      <div class="container">
+        <div class="section-head">
+          <small>Profil Guru</small>
+          <h2>Guru sejarah yang profesional, ramah, dan inspiratif</h2>
+        </div>
+
+        <div class="about-grid">
+          <div class="card">
+            <h3>Komitmen pembelajaran</h3>
+            <p style="color:var(--muted); margin-top:10px;">
+              Saya berkomitmen menciptakan pengalaman belajar sejarah yang aktif, berpihak pada siswa, dan menumbuhkan rasa ingin tahu. Setiap materi disampaikan dengan pendekatan yang sederhana, kontekstual, dan relevan dengan kehidupan sehari-hari.
+            </p>
+
+            <ul class="checklist">
+              <li>Menjadikan sejarah sebagai bahan refleksi dan inspirasi.</li>
+              <li>Mendorong siswa berpikir kritis dan analitis.</li>
+              <li>Membantu siswa menyusun argumen berdasarkan bukti sejarah.</li>
+              <li>Memberikan ruang diskusi yang aman, kreatif, dan menyenangkan.</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h3>Nilai utama pembelajaran</h3>
+            <p style="color:var(--muted); margin-top:10px;">
+              Dalam pembelajaran sejarah, siswa tidak hanya diminta mengingat, tetapi juga memahami makna dan menilai kejadian masa lalu. Dengan pendekatan yang tepat, sejarah dapat menjadi sumber pembelajaran yang hidup dan bermakna.
+            </p>
+
+            <ul class="checklist">
+              <li>Rasa ingin tahu sebagai fondasi belajar.</li>
+              <li>Kejujuran dalam menilai peristiwa sejarah.</li>
+              <li>Semangat berkolaborasi dalam diskusi.</li>
+              <li>Keteladanan nilai-nilai perjuangan bangsa.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tujuan">
+      <div class="container">
+        <div class="section-head">
+          <small>Pendahuluan & tujuan</small>
+          <h2>Pentingnya cara berpikir sejarah</h2>
+        </div>
+
+        <div class="cp-tp">
+          <div class="card">
+            <div class="badge-box">Capaian Pembelajaran</div>
+            <p style="color:var(--muted);">
+              Peserta didik mampu menjelaskan, membedakan, dan menganalisis konsep berpikir diakronik dan sinkronik dalam mempelajari sejarah. Siswa juga mampu mengaplikasikan kedua pendekatan tersebut untuk memahami peristiwa masa lalu secara lebih objektif, kritis, dan terstruktur.
+            </p>
+            <ul class="objective-list">
+              <li>Menjelaskan pengertian diakronik dan sinkronik.</li>
+              <li>Mengidentifikasi ciri-ciri keduanya.</li>
+              <li>Menganalisis peristiwa berdasarkan ruang dan waktu.</li>
+              <li>Menyajikan temuan secara logis dan komunikatif.</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div class="badge-box">Tujuan Pembelajaran</div>
+            <p style="color:var(--muted);">
+              Setelah mengikuti pembelajaran, siswa diharapkan mampu:
+            </p>
+            <ul class="objective-list">
+              <li>Membedakan konsep berpikir diakronik dan sinkronik dengan benar.</li>
+              <li>Menjelaskan perkembangan peristiwa dalam rentang waktu tertentu.</li>
+              <li>Menggambarkan kondisi suatu masa secara menyeluruh.</li>
+              <li>Menghubungkan sejarah dengan kehidupan nyata dan isu kontemporer.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="materi">
+      <div class="container">
+        <div class="section-head">
+          <small>Bab 1</small>
+          <h2>Peta konsep & materi pembelajaran</h2>
+        </div>
+
+        <div class="concept-grid">
+          <div class="concept-box">
+            <div class="concept-tag">A. Diakronik</div>
+            <h3>Berpikir Diakronik</h3>
+            <p style="color:var(--muted);">
+              Berpikir diakronik adalah cara memahami sejarah dengan menekankan urutan waktu dan proses perubahan dari masa ke masa. Dalam pendekatan ini, sejarah dipelajari secara kronologis dan hubungan sebab-akibat antarperistiwa menjadi fokus utama.
+            </p>
+
+            <ul class="feature-list">
+              <li><span class="dot"></span><span><strong>Ciri utama:</strong> menekankan dimensi waktu dan perkembangan.</span></li>
+              <li><span class="dot"></span><span><strong>Dimensi vertikal:</strong> memandang peristiwa dari masa ke masa secara berurutan.</span></li>
+              <li><span class="dot"></span><span><strong>Contoh:</strong> perkembangan Revolusi Indonesia dari 1945 hingga 1949.</span></li>
+            </ul>
+          </div>
+
+          <div class="concept-box">
+            <div class="concept-tag">B. Sinkronik</div>
+            <h3>Berpikir Sinkronik</h3>
+            <p style="color:var(--muted);">
+              Berpikir sinkronik adalah cara memahami peristiwa sejarah dalam satu masa tertentu secara menyeluruh. Fokusnya adalah mengamati berbagai aspek seperti politik, ekonomi, sosial, agama, dan budaya yang terjadi secara bersamaan pada periode tertentu.
+            </p>
+
+            <ul class="feature-list">
+              <li><span class="dot"></span><span><strong>Ciri utama:</strong> menekankan dimensi ruang dan kondisi suatu periode.</span></li>
+              <li><span class="dot"></span><span><strong>Dimensi horizontal:</strong> meluas pada aspek yang terjadi dalam satu masa.</span></li>
+              <li><span class="dot"></span><span><strong>Contoh:</strong> kondisi Indonesia pada masa Reformasi 1998.</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="map-concept">
+          <div class="concept-tag" style="margin-bottom:18px;">Peta Konsep Visual</div>
+          <ul class="tree">
+            <li>Berpikir Sejarah
+              <ul>
+                <li>Diakronik
+                  <ul>
+                    <li>Fokus pada waktu</li>
+                    <li>Urutan peristiwa</li>
+                    <li>Perubahan dan perkembangan</li>
+                    <li>Hubungan sebab-akibat</li>
+                  </ul>
+                </li>
+                <li>Sinkronik
+                  <ul>
+                    <li>Fokus pada ruang</li>
+                    <li>Analisis satu masa</li>
+                    <li>Berbagai aspek kehidupan</li>
+                    <li>Konteks sosial-politik-budaya</li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+
+        <div style="margin-top:24px;">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Aspek</th>
+                <th>Diakronik</th>
+                <th>Sinkronik</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Fokus utama</td>
+                <td>Perkembangan dalam waktu</td>
+                <td>Kondisi pada satu masa</td>
+              </tr>
+              <tr>
+                <td>Sudut pandang</td>
+                <td>Vertikal</td>
+                <td>Horizontal</td>
+              </tr>
+              <tr>
+                <td>Metode</td>
+                <td>Kronologis</td>
+                <td>Menyeluruh dan terpadu</td>
+              </tr>
+              <tr>
+                <td>Tujuan</td>
+                <td>Melihat perubahan dan kesinambungan</td>
+                <td>Melihat hubungan antarunsur dalam satu periode</td>
+              </tr>
+              <tr>
+                <td>Contoh</td>
+                <td>Perjalanan kemerdekaan Indonesia 1945–1949</td>
+                <td>Kondisi Indonesia pada masa awal kemerdekaan</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="two-col" style="margin-top:28px;">
+          <div class="card">
+            <div class="badge-box">Video Pembelajaran</div>
+            <h3 style="margin-top:8px;">Rekomendasi YouTube</h3>
+            <ul class="video-list">
+              <li>
+                <strong>1. Cara Berpikir Diakronik dan Sinkronik dalam Sejarah</strong>
+                <span style="color:var(--muted);">Menjelaskan definisi, perbedaan, serta contoh sederhana untuk siswa.</span>
+              </li>
+              <li>
+                <strong>2. Sejarah Indonesia: Diakronik vs Sinkronik</strong>
+                <span style="color:var(--muted);">Menghubungkan konsep dengan peristiwa sejarah bangsa Indonesia.</span>
+              </li>
+              <li>
+                <strong>3. Berpikir Sejarah: Diakronik dan Sinkronik</strong>
+                <span style="color:var(--muted);">Video edukatif dengan pendekatan visual dan terstruktur.</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div class="badge-box">Inti pembelajaran</div>
+            <h3 style="margin-top:8px;">Kesimpulan singkat</h3>
+            <p style="color:var(--muted);">
+              Diakronik melihat sejarah sebagai proses panjang dan perubahan yang terjadi dari waktu ke waktu, sementara sinkronik melihat sejarah sebagai gambaran keadaan suatu masa secara menyeluruh. Keduanya sama penting dalam menafsirkan fakta sejarah secara kritis.
+            </p>
+
+            <ul class="checklist">
+              <li>Diakronik = menekan proses dan kronologi.</li>
+              <li>Sinkronik = menekan konteks dan keterkaitan aspek.</li>
+              <li>Sejarah menjadi lebih utuh ketika keduanya dipahami bersama.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="presensi">
+      <div class="container">
+        <div class="section-head">
+          <small>Presensi Pintar</small>
+          <h2>Face Capture otomatis</h2>
+        </div>
+
+        <div class="two-col">
+          <div class="card">
+            <h3>Petunjuk absensi harian</h3>
+            <ul class="feature-list">
+              <li><span class="dot"></span><span>Siswa membuka menu <strong>Presensi Harian</strong> pada LMS.</span></li>
+              <li><span class="dot"></span><span>Pilih kelas dan mata pelajaran Sejarah.</span></li>
+              <li><span class="dot"></span><span>Klik <strong>Ambil Foto / Face Capture</strong>.</span></li>
+              <li><span class="dot"></span><span>Pastikan wajah terlihat jelas dan pencahayaan cukup.</span></li>
+              <li><span class="dot"></span><span>Tekan <strong>Kirim Presensi</strong> untuk otomatis masuk rekap kehadiran.</span></li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h3>Aturan penting</h3>
+            <ul class="checklist">
+              <li>Gunakan kamera depan perangkat.</li>
+              <li>Wajah terlihat jelas tanpa penutup yang menghalangi identitas.</li>
+              <li>Ambil foto di tempat yang terang dan tidak bergerak.</li>
+              <li>Jika gagal, ulangi pengambilan foto.</li>
+              <li>Data akan otomatis tercatat ke sistem kehadiran.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="diskusi">
+      <div class="container">
+        <div class="section-head">
+          <small>Ruang Diskusi & Portofolio</small>
+          <h2>Aktivitas reflektif siswa</h2>
+        </div>
+
+        <div class="two-col">
+          <div class="card">
+            <h3>Pertanyaan pemantik diskusi</h3>
+            <ul class="feature-list">
+              <li><span class="dot"></span><span>Kapan kita membutuhkan cara berpikir diakronik dalam kehidupan sehari-hari?</span></li>
+              <li><span class="dot"></span><span>Bagaimana sinkronik membantu memahami kondisi masyarakat pada masa tertentu?</span></li>
+              <li><span class="dot"></span><span>Apakah perubahan sosial selalu berdampak pada kehidupan sehari-hari?</span></li>
+              <li><span class="dot"></span><span>Manakah pendekatan yang lebih cocok untuk membahas Reformasi 1998?</span></li>
+              <li><span class="dot"></span><span>Bagaimana sejarah dapat menjadi pelajaran untuk masa depan?</span></li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h3>Pojok Portofolio</h3>
+            <p style="color:var(--muted);">
+              Ruang digital bagi siswa menampilkan hasil kerja, analisis, dan kreativitas dalam memahami materi sejarah.
+            </p>
+
+            <ul class="checklist">
+              <li>Analisis peristiwa dengan pendekatan diakronik.</li>
+              <li>Analisis satu masa dengan pendekatan sinkronik.</li>
+              <li>Infografik dan diagram perbandingan.</li>
+              <li>Video singkat atau esai reflektif.</li>
+              <li>Presentasi hasil diskusi kelompok.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="evaluasi">
+      <div class="container">
+        <div class="section-head">
+          <small>Evaluasi</small>
+          <h2>Kuis interaktif & leaderboard</h2>
+        </div>
+
+        <div class="two-col">
+          <div class="quiz-box">
+            <div class="quiz-item">
+              <div class="quiz-question">1. Pernyataan berikut yang paling tepat menggambarkan berpikir diakronik adalah:</div>
+              <div class="options">
+                <label class="option"><input type="radio" name="q1" /> A. Mengkaji kondisi masyarakat dalam satu periode tertentu</label>
+                <label class="option"><input type="radio" name="q1" /> B. Menelusuri urutan dan perkembangan peristiwa dalam waktu</label>
+                <label class="option"><input type="radio" name="q1" /> C. Hanya melihat satu aspek kehidupan</label>
+                <label class="option"><input type="radio" name="q1" /> D. Menyusun tokoh tanpa konteks masa</label>
+              </div>
+              <div class="answer">Jawaban benar: B. Menelusuri urutan dan perkembangan peristiwa dalam waktu.</div>
+            </div>
+
+            <div class="quiz-item">
+              <div class="quiz-question">2. Yang termasuk ciri berpikir sinkronik adalah:</div>
+              <div class="options">
+                <label class="option"><input type="radio" name="q2" /> A. Menganalisis sejarah berdasarkan kronologi panjang</label>
+                <label class="option"><input type="radio" name="q2" /> B. Menilai beberapa aspek dalam satu masa secara menyeluruh</label>
+                <label class="option"><input type="radio" name="q2" /> C. Hanya menggunakan data tahun</label>
+                <label class="option"><input type="radio" name="q2" /> D. Membahas perubahan masa depan</label>
+              </div>
+              <div class="answer">Jawaban benar: B. Menilai beberapa aspek dalam satu masa secara menyeluruh.</div>
+            </div>
+
+            <div class="quiz-item">
+              <div class="quiz-question">3. Perbedaan utama diakronik dan sinkronik adalah:</div>
+              <div class="options">
+                <label class="option"><input type="radio" name="q3" /> A. Diakronik menekankan ruang, sinkronik menekankan waktu</label>
+                <label class="option"><input type="radio" name="q3" /> B. Diakronik menekankan waktu, sinkronik menekankan ruang dan kondisi suatu masa</label>
+                <label class="option"><input type="radio" name="q3" /> C. Sinkronik hanya untuk masa depan</label>
+                <label class="option"><input type="radio" name="q3" /> D. Keduanya sama sekali tidak relevan</label>
+              </div>
+              <div class="answer">Jawaban benar: B. Diakronik menekankan waktu, sinkronik menekankan ruang dan kondisi suatu masa.</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="badge-box">Papan peringkat</div>
+            <h3 style="margin-top:8px;">Leaderboard motivasi belajar</h3>
+            <div class="leaderboard">
+              <div class="leader-row">
+                <div class="rank">1</div>
+                <div class="name">Aisyah</div>
+                <div class="score">980</div>
+              </div>
+              <div class="leader-row">
+                <div class="rank">2</div>
+                <div class="name">Bimo</div>
+                <div class="score">940</div>
+              </div>
+              <div class="leader-row">
+                <div class="rank">3</div>
+                <div class="name">Citra</div>
+                <div class="score">900</div>
+              </div>
+              <div class="leader-row">
+                <div class="rank">4</div>
+                <div class="name">Dika</div>
+                <div class="score">870</div>
+              </div>
+              <div class="leader-row">
+                <div class="rank">5</div>
+                <div class="name">Eka</div>
+                <div class="score">830</div>
+              </div>
+            </div>
+
+            <p style="margin-top:18px; color:var(--muted);">
+              Leaderboard digunakan untuk memotivasi siswa agar lebih aktif, disiplin, dan semangat dalam mengikuti kuis, diskusi, serta tugas pembelajaran. Fokus utamanya adalah peningkatan diri dan kompetisi yang sehat.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="ai">
+      <div class="container">
+        <div class="section-head">
+          <small>Asisten AI</small>
+          <h2>Virtual tutor 24/7</h2>
+        </div>
+
+        <div class="chatbot">
+          <div class="chat-header">
+            <div class="chat-bot">
+              <div class="bot-icon">AI</div>
+              <span>Virtual Tutor Sejarah</span>
+            </div>
+            <div class="chat-status">Online • Siap membantu</div>
+          </div>
+
+          <div class="chat-body">
+            <div class="msg bot">Halo, siswa! Saya siap membantu menjelaskan materi Diakronik dan Sinkronik, memberi contoh, dan membimbing tugas belajar kalian 24 jam.</div>
+            <div class="msg user">Apa perbedaan diakronik dan sinkronik?</div>
+            <div class="msg bot">Diakronik menitikberatkan pada perkembangan dalam waktu, sedangkan sinkronik menitikberatkan pada kondisi suatu masa secara menyeluruh. Keduanya sama penting untuk memahami sejarah secara utuh.</div>
+
+            <div class="quick-questions">
+              <button class="pill" type="button">Berikan contoh</button>
+              <button class="pill" type="button">Buatkan kuis</button>
+              <button class="pill" type="button">Jelaskan sinkronik</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="multiuser">
+      <div class="container">
+        <div class="section-head">
+          <small>Scenario multi-user</small>
+          <h2>Guru & siswa dalam LMS</h2>
+        </div>
+
+        <div class="user-role">
+          <div class="role-panel">
+            <h3>Peran Guru (Admin)</h3>
+            <ul>
+              <li>Menyusun materi, tugas, dan jadwal belajar.</li>
+              <li>Mengelola presensi dan rekap kehadiran siswa.</li>
+              <li>Membimbing diskusi dan memberikan umpan balik.</li>
+              <li>Memonitor perkembangan progres belajar siswa.</li>
+              <li>Menggunakan leaderboard untuk motivasi dan evaluasi.</li>
+            </ul>
+          </div>
+
+          <div class="role-panel">
+            <h3>Peran Siswa</h3>
+            <ul>
+              <li>Mengakses materi dan video pembelajaran.</li>
+              <li>Mengikuti presensi harian dan kuis interaktif.</li>
+              <li>Berpartisipasi dalam diskusi dan portofolio.</li>
+              <li>Memberikan jawaban dan mengajukan pertanyaan.</li>
+              <li>Memantau hasil belajar dan berkinerja optimal.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      © 2026 Sejarah Digital | Pembelajaran Diakronik & Sinkronik
+    </div>
+  </footer>
+
+  <script>
+    document.querySelectorAll('.pill').forEach(button => {
+      button.addEventListener('click', () => {
+        const chatBody = document.querySelector('.chat-body');
+        const msg = document.createElement('div');
+        msg.className = 'msg user';
+        msg.textContent = button.textContent;
+        chatBody.appendChild(msg);
+
+        const response = document.createElement('div');
+        response.className = 'msg bot';
+
+        const q = button.textContent.toLowerCase();
+        if (q.includes('contoh')) {
+          response.textContent = 'Contoh diakronik: perkembangan perjuangan kemerdekaan Indonesia dari 1945 hingga 1949. Contoh sinkronik: kondisi Indonesia pada masa awal kemerdekaan yang mencakup politik, ekonomi, sosial, dan budaya.';
+        } else if (q.includes('kuis')) {
+          response.textContent = 'Berikut contoh kuis: “Apa yang dimaksud dengan berpikir diakronik?” Jawabannya: melihat perubahan peristiwa dalam rentang waktu.';
+        } else {
+          response.textContent = 'Sinkronik adalah pendekatan yang menelaah suatu peristiwa pada masa tertentu secara menyeluruh, dengan melihat berbagai aspek seperti politik, ekonomi, sosial, budaya, dan agama.';
+        }
+
+        chatBody.appendChild(response);
+        chatBody.scrollTop = chatBody.scrollHeight;
+      });
+    });
+
+    document.querySelectorAll('.option').forEach(option => {
+      option.addEventListener('click', () => {
+        const answerBox = option.parentElement.parentElement.querySelector('.answer');
+        if (answerBox) answerBox.style.display = 'block';
+      });
+    });
+  </script>
+</body>
+</html>
